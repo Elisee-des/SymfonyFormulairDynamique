@@ -30,19 +30,19 @@ class Departement
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Region::class, mappedBy="departement", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="departement")
      */
-    private $regions;
+    private $annonces;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Annonce::class, inversedBy="departements")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Region::class, inversedBy="departements")
      */
-    private $annonce;
+    private $region;
 
     public function __construct()
     {
         $this->regions = new ArrayCollection();
+        $this->annonces = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,44 +74,44 @@ class Departement
         return $this;
     }
 
-    /**
-     * @return Collection<int, Region>
-     */
-    public function getRegions(): Collection
+    public function getRegion(): ?Region
     {
-        return $this->regions;
+        return $this->region;
     }
 
-    public function addRegion(Region $region): self
+    public function setRegion(?Region $region): self
     {
-        if (!$this->regions->contains($region)) {
-            $this->regions[] = $region;
-            $region->setDepartement($this);
+        $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Annonce>
+     */
+    public function getAnnonces(): Collection
+    {
+        return $this->annonces;
+    }
+
+    public function addAnnonce(Annonce $annonce): self
+    {
+        if (!$this->annonces->contains($annonce)) {
+            $this->annonces[] = $annonce;
+            $annonce->setDepartement($this);
         }
 
         return $this;
     }
 
-    public function removeRegion(Region $region): self
+    public function removeAnnonce(Annonce $annonce): self
     {
-        if ($this->regions->removeElement($region)) {
+        if ($this->annonces->removeElement($annonce)) {
             // set the owning side to null (unless already changed)
-            if ($region->getDepartement() === $this) {
-                $region->setDepartement(null);
+            if ($annonce->getDepartement() === $this) {
+                $annonce->setDepartement(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getAnnonce(): ?Annonce
-    {
-        return $this->annonce;
-    }
-
-    public function setAnnonce(?Annonce $annonce): self
-    {
-        $this->annonce = $annonce;
 
         return $this;
     }

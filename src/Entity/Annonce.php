@@ -46,9 +46,9 @@ class Annonce
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity=Departement::class, mappedBy="annonce", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity=Departement::class, inversedBy="annonces")
      */
-    private $departements;
+    private $departement;
 
     public function __construct()
     {
@@ -120,32 +120,14 @@ class Annonce
         return $this;
     }
 
-    /**
-     * @return Collection<int, Departement>
-     */
-    public function getDepartements(): Collection
+    public function getDepartement(): ?Departement
     {
-        return $this->departements;
+        return $this->departement;
     }
 
-    public function addDepartement(Departement $departement): self
+    public function setDepartement(?Departement $departement): self
     {
-        if (!$this->departements->contains($departement)) {
-            $this->departements[] = $departement;
-            $departement->setAnnonce($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDepartement(Departement $departement): self
-    {
-        if ($this->departements->removeElement($departement)) {
-            // set the owning side to null (unless already changed)
-            if ($departement->getAnnonce() === $this) {
-                $departement->setAnnonce(null);
-            }
-        }
+        $this->departement = $departement;
 
         return $this;
     }
